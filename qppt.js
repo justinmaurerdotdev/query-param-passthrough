@@ -51,13 +51,16 @@ function set_cookie_values () {
 
   if (token !== null) {
     passthroughParams.token = token
-
-    if (cid !== null) {
-      passthroughParams.cid = cid
-    }
   }
 
-  if (typeof passthroughParams.token !== 'undefined') {
+  if (cid !== null) {
+    passthroughParams.cid = cid
+  }
+
+  if (
+    typeof passthroughParams.token !== 'undefined' ||
+    typeof passthroughParams.cid !== 'undefined'
+  ) {
     cookieManager.setCookie(
       'qpptparams',
       JSON.stringify(passthroughParams),
@@ -71,7 +74,10 @@ function replace_urls () {
   if (cookie) {
     const cookieValues = JSON.parse(cookie)
 
-    if (typeof cookieValues.token !== 'undefined') {
+    if (
+      typeof cookieValues.token !== 'undefined' ||
+      typeof cookieValues.cid !== 'undefined'
+    ) {
       if (
         typeof qppt_settings !== 'undefined' &&
         typeof qppt_settings.qppt_target_domain !== 'undefined'
@@ -109,13 +115,13 @@ function process_a_tag (item) {
       cookieValues.token !== null
     ) {
       params.set('token', cookieValues.token)
+    }
 
-      if (
-        typeof cookieValues.cid !== 'undefined' &&
-        cookieValues.cid !== null
-      ) {
-        params.set('cid', cookieValues.cid)
-      }
+    if (
+      typeof cookieValues.cid !== 'undefined' &&
+      cookieValues.cid !== null
+    ) {
+      params.set('cid', cookieValues.cid)
     }
 
     item.search = params
